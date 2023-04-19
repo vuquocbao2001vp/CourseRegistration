@@ -1,0 +1,33 @@
+.dx-checkbox-icon {
+    border-radius: 3px !important;
+    border: 2px solid var(--input-normal-border-color) !important;
+    font-size: 9px;
+    width: 18px !important;
+    height: 18px !important;
+}
+
+.dx-state-hover .dx-checkbox-icon {
+  border: 2px solid var(--input-hover-border-color) !important;
+}
+
+
+.dx-checkbox-checked .dx-checkbox-icon {
+    color: #fff !important;
+}
+  
+.dx-checkbox-checked .dx-checkbox-icon:active {
+    background-color: var(--input-active-border-color) !important;
+}
+  
+.dx-checkbox-checked .dx-checkbox-icon, .dx-list-item-selected .dx-checkbox-icon {
+    background-color: var(--input-active-border-color);
+    border-color: var(--input-active-border-color) !important;
+}
+  
+.dx-checkbox-text {
+    font-weight: 400;
+}
+
+.dx-checkbox-indeterminate .dx-checkbox-icon::before {
+    background-color: #fff !important;
+}

@@ -1,0 +1,70 @@
+
+.dx-placeholder {
+    font-style: italic;
+    color: var(--text-placeholder-color) !important;
+}
+.dx-invalid-message > .dx-overlay-content {
+    padding: 4px 0 !important;
+    font-size: .85rem !important;
+    background-color: rgba(255, 255, 255, 0) !important;
+    color: var(--text-red-color) !important;
+}
+.dx-state-focused {
+    border-color: var(--input-hover-border-color) !important;
+  }
+  .dx-state-active {
+    border-color: var(--input-hover-border-color) !important;
+  }
+  
+  .dx-tag-remove-button {
+    position: absolute;
+    top: -1px;
+    right: 2px;
+    width: 25px;
+    height: 100%;
+  }
+  .dx-texteditor.dx-state-hover {
+    border-color: var(--input-hover-border-color) !important;
+  }
+  .dx-list:not(.dx-list-select-decorator-enabled)
+    .dx-list-item.dx-list-item-selected {
+    background-color: var(--combobox-highlight-bg-color) !important;
+    color: var(--combobox-highlight-color) !important;
+  }
+  .dx-list:not(.dx-list-select-decorator-enabled) .dx-list-item.dx-state-focused {
+    color: #333 !important;
+    background-color: rgba(0, 0, 0, 0.1) !important;
+  }
+  .dx-list:not(.dx-list-select-decorator-enabled) .dx-list-item.dx-state-focused {
+    background-color: var(--combobox-highlight-bg-color) !important;
+    color: #000 !important;
+  }
+  .dx-list:not(.dx-list-select-decorator-enabled)
+    .dx-list-item.dx-state-focused.dx-list-item-selected {
+    color: #000;
+  }
+  
+  .dx-list:not(.dx-list-select-decorator-enabled) .dx-list-item.dx-state-active {
+    background-color: var(--combobox-highlight-bg-color) !important;
+    color: var(--combobox-highlight-color) !important;
+  }
+  
+  .dx-dropdowneditor.dx-state-active .dx-dropdowneditor-icon,
+  .dx-dropdowneditor.dx-state-hover:not(.dx-custom-button-hovered)
+    .dx-dropdowneditor-icon {
+    background-color: transparent !important;
+    border-color: transparent;
+  }
+  
+  .dx-dropdowneditor-button.dx-state-active .dx-dropdowneditor-icon,
+  .dx-dropdowneditor.dx-dropdowneditor-active .dx-dropdowneditor-icon {
+    background-color: transparent !important;
+    border-color: transparent;
+    color: #333;
+    opacity: 1;
+  }
+  
+  .dx-item.dx-list-item.dx-list-item-selected {
+    position: relative;
+  }
+  

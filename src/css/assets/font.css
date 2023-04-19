@@ -1,0 +1,29 @@
+@font-face {
+    font-family: Font Regular;
+    src: url(../../assets/fonts/notosans-regular.2cb88a13.woff2);
+}
+
+@font-face {
+    font-family: Font Bold;
+    src: url(../../assets/fonts/notosans-bold.3ede5aff.woff2);
+}
+
+@font-face {
+    font-family: Font Italic;
+    src: url(../../assets/fonts/notosans-italic.1c1aaac9.woff2);
+}
+
+@font-face {
+    font-family: Font SemiBold;
+    src: url(../../assets/fonts/notosans-semibold.df3e6dc4.woff2);
+}
+
+.font-bold{
+    font-family: Font Bold;
+}
+.font-semibold{
+    font-family: Font SemiBold;
+}
+.font-italic {
+    font-family: Font Italic;
+}

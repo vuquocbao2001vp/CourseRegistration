@@ -1,0 +1,50 @@
+@import url(./assets/font.css);
+@import url(./assets/color.css);
+@import url(./assets/icon.css);
+@import url(../css/devextreme/dxselectbox.css);
+@import url(../css/devextreme/dxdatebox.css);
+@import url(../css/devextreme/dxcheckbox.css);
+
+html {
+    font-size: 16px;
+    box-sizing: border-box;
+}
+body{
+    font-family: Font Regular;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    color: #111;
+}
+div {
+    user-select: none;
+}
+button{
+    border: none;
+}
+.flex {
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+}
+::placeholder {
+    font-family: Font Italic !important;
+    font-size: 13px !important;
+}
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+::-webkit-scrollbar-thumb {
+    background: #b8bcc3;
+}
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+.dx-theme-generic-typography {
+    font-family: Font Regular !important;
+    font-size: 13px !important;
+}
+b {
+    font-weight: bold;
+}
