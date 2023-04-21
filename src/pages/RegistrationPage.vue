@@ -263,7 +263,7 @@ export default {
   position: relative;
 }
 .registration-page-table {
-  width: 100%;
+  width: 100% - 0px;
   height: calc(100vh - 368px);
   box-sizing: border-box;
   overflow: auto;
