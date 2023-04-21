@@ -1,6 +1,6 @@
 <template>
   <div class="registration-page">
-    <!-- <div class="search-input flex">
+    <div class="search-input flex">
       <div class="text-box">
         <DxTextBox
           mode="search"
@@ -9,7 +9,7 @@
           @value-changed="getTextSearch"
         />
       </div>
-    </div> -->
+    </div>
     <div class="registration-page-table">
       <base-table>
         <template #table-header>
@@ -26,18 +26,18 @@
         </template>
         <template #table-body>
           <tr
-            v-for="(course, index) in subjects"
-            :key="index"
+            v-for="course in subjects"
+            :key="course.CourseID"
             :class="{
-              'row-disabled': isDuplicate[index],
-              'row-selected': isCheck[index],
+              'row-disabled': isDuplicate[course.CourseID],
+              'row-selected': isCheck[course.CourseID],
             }"
           >
             <td class="td-text-center">
-              <div @click="selectCourse(course.CourseID, index)">
+              <div @click="selectCourse(course.CourseID)">
                 <DxCheckBox
-                  v-model="isCheck[index]"
-                  :disabled="isDuplicate[index]"
+                  v-model="isCheck[course.CourseID]"
+                  :disabled="isDuplicate[course.CourseID]"
                 />
               </div>
             </td>
@@ -129,7 +129,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["subjects", "enrollments"]),
+    ...mapGetters(["subjects", "enrollments", "student"]),
   },
   watch: {
     enrollments: function (value) {
@@ -138,39 +138,65 @@ export default {
     },
     enrollment: {
       handler: function (value) {
-        for (let i = 0; i < this.subjects.length; i++) {
-          let id = this.subjects[i].CourseID;
+        for (var subject of this.subjects) {
+          let id = subject.CourseID;
           let course = value.find((item) => item.CourseID == id);
           if (course) {
-            this.isCheck[i] = true;
+            this.isCheck[subject.CourseID] = true;
           } else {
-            this.isCheck[i] = false;
-            let schedule = this.subjects[i].Schedule;
+            this.isCheck[subject.CourseID] = false;
+            let schedule = subject.Schedule;
             let check = value.find(
               (item) => this.$isMatchDate(item.Schedule, schedule) === true
             );
             if (check) {
-              this.isDuplicate[i] = true;
+              this.isDuplicate[subject.CourseID] = true;
             } else {
-              this.isDuplicate[i] = false;
+              this.isDuplicate[subject.CourseID] = false;
             }
           }
         }
       },
       deep: true,
     },
+    subjects: function (value) {
+        if (this.enrollment.length > 0) {
+          for (var subject of value) {
+            let id = subject.CourseID;
+            let course = this.enrollment.find((item) => item.CourseID == id);
+            if (course) {
+              this.isCheck[subject.CourseID] = true;
+            } else {
+              this.isCheck[subject.CourseID] = false;
+              let schedule = subject.Schedule;
+              let check = this.enrollment.find(
+                (item) => this.$isMatchDate(item.Schedule, schedule) === true
+              );
+              if (check) {
+                this.isDuplicate[subject.CourseID] = true;
+              } else {
+                this.isDuplicate[subject.CourseID] = false;
+              }
+            }
+          }
+        }
+      },
     textSearch: function (value) {
       this.getSubjects({
-        id: "1113bff9-7186-5b43-68be-406293204378",
+        id: this.student.StudentID,
         searchKey: value,
       });
     },
   },
-  mounted() {
-    this.loadData();
+  created() {
+    const info = JSON.parse(localStorage.getItem("info"));
+    if (info) {
+      this.setStudent(info);
+      this.loadData();
+    } 
   },
   methods: {
-    ...mapMutations(["setSubjects", "setEnrollments"]),
+    ...mapMutations(["setSubjects", "setStudent", "setEnrollments"]),
     ...mapActions([
       "getSubjects",
       "getEnrollments",
@@ -180,15 +206,15 @@ export default {
     ]),
     loadData() {
       this.getSubjects({
-        id: "1113bff9-7186-5b43-68be-406293204378",
+        id: this.student.StudentID,
         searchKey: "",
       }).then(() => {
-        this.getEnrollments("1113bff9-7186-5b43-68be-406293204378");
+        this.getEnrollments(this.student.StudentID);
       });
     },
-    selectCourse(courseId, index) {
-      if (this.isDuplicate[index] !== true) {
-        if (!this.isCheck[index]) {
+    selectCourse(courseId) {
+      if (this.isDuplicate[courseId] !== true) {
+        if (!this.isCheck[courseId]) {
           this.enrollment = this.enrollment.filter(
             (course) => course.CourseID !== courseId
           );
@@ -225,19 +251,22 @@ export default {
           let listStatus = this.enrollment.map((item) => item.Status).join(",");
           if (this.confirmAction == 1) {
             this.insertEnrollments({
-              studentId: "1113bff9-7186-5b43-68be-406293204378",
+              studentId: this.student.StudentID,
               listCourseId: listCourseId,
               listStatus: listStatus,
             });
             this.oldEnrollment = [...this.enrollment];
           } else if (this.confirmAction == 2) {
             this.updateEnrollments({
-              studentId: "1113bff9-7186-5b43-68be-406293204378",
+              studentId: this.student.StudentID,
               listCourseId: listCourseId,
               listStatus: listStatus,
             });
             this.oldEnrollment = [...this.enrollment];
           }
+        }
+        else {
+          alert("Bạn chưa thay đổi môn học nào.")
         }
       } else {
         alert("Bạn cần chọn môn học trước khi nhấn Ghi nhận.");
@@ -246,12 +275,12 @@ export default {
     deleteEnrollmentOnClick() {
       if (this.enrollment.length > 0) {
         if (confirm("Bạn có chắc chắn muốn xóa danh sách đăng ký học không?")) {
-          this.deleteEnrollments("1113bff9-7186-5b43-68be-406293204378");
+          this.deleteEnrollments(this.student.StudentID);
           this.enrollment = [];
           this.oldEnrollment = [];
         }
       } else {
-        alert("Bạn chưa đăng ký môn học nào.")
+        alert("Bạn chưa đăng ký môn học nào.");
       }
     },
   },
@@ -270,7 +299,7 @@ export default {
 }
 .result-table {
   margin-top: 16px;
-  height: 179px;
+  height: 143px;
   box-sizing: border-box;
   overflow: auto;
 }

@@ -22,6 +22,7 @@ const router = createRouter({
 });
 
 const token = localStorage.getItem("key")
+const info = localStorage.getItem("info")
 // Thêm navigation guard trước khi vào mỗi route
 router.beforeEach((to, from, next) => {
   // Kiểm tra xem route tồn tại hay không
@@ -37,7 +38,7 @@ router.beforeEach((to, from, next) => {
     }
   }
   // về login
-  if (token !== null && from.path == "/" && to.path == "/login") {
+  if (token !== null && info !== null && from.path == "/" && to.path == "/login") {
     if (confirm("Bạn có chắc chắn muốn đăng xuất không?")) {
       store.dispatch("userLogout");
     } else {

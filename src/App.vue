@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import {mapGetters, mapMutations} from 'vuex'
+import {mapGetters, mapMutations, mapActions} from 'vuex'
 import TheNavbar from "./components/layout/TheNavbar.vue";
 import TheHeader from "./components/layout/TheHeader.vue";
 import TheContent from "./components/layout/TheContent.vue";
@@ -46,11 +46,12 @@ export default {
     if (token && info) {
       this.setToken(token);
     } else {
-      this.$router.push({path: '/login'});
+      this.logout();
     }
   },
   methods: {
-    ...mapMutations(["setToken"])
+    ...mapMutations(["setToken"]),
+    ...mapActions(["logout"])
   },
 };
 </script>
