@@ -96,6 +96,9 @@
       <div class="total-regis">
         Số môn học đã đăng ký: {{ enrollment.length }}
       </div>
+      <div class="total-regis">
+        Số tín chỉ đã đăng ký: {{ totalRegistedCredit }}
+      </div>
       <div class="button" @click="deleteEnrollmentOnClick">
         <base-button buttonType="red-square" buttonName="Xóa" />
       </div>
@@ -126,6 +129,7 @@ export default {
       textSearch: null,
       confirmAction: null, // 1-Thêm mới, 2-Sửa
       oldEnrollment: null,
+      totalRegistedCredit: null,
     };
   },
   computed: {
@@ -138,6 +142,11 @@ export default {
     },
     enrollment: {
       handler: function (value) {
+        this.totalRegistedCredit = 0;
+        for (let i = 0; i < this.enrollment.length; i++) {
+          this.totalRegistedCredit += this.enrollment[i].Credit;
+        }
+
         for (var subject of this.subjects) {
           let id = subject.CourseID;
           let course = value.find((item) => item.CourseID == id);
@@ -160,27 +169,27 @@ export default {
       deep: true,
     },
     subjects: function (value) {
-        if (this.enrollment.length > 0) {
-          for (var subject of value) {
-            let id = subject.CourseID;
-            let course = this.enrollment.find((item) => item.CourseID == id);
-            if (course) {
-              this.isCheck[subject.CourseID] = true;
+      if (this.enrollment.length > 0) {
+        for (var subject of value) {
+          let id = subject.CourseID;
+          let course = this.enrollment.find((item) => item.CourseID == id);
+          if (course) {
+            this.isCheck[subject.CourseID] = true;
+          } else {
+            this.isCheck[subject.CourseID] = false;
+            let schedule = subject.Schedule;
+            let check = this.enrollment.find(
+              (item) => this.$isMatchDate(item.Schedule, schedule) === true
+            );
+            if (check) {
+              this.isDuplicate[subject.CourseID] = true;
             } else {
-              this.isCheck[subject.CourseID] = false;
-              let schedule = subject.Schedule;
-              let check = this.enrollment.find(
-                (item) => this.$isMatchDate(item.Schedule, schedule) === true
-              );
-              if (check) {
-                this.isDuplicate[subject.CourseID] = true;
-              } else {
-                this.isDuplicate[subject.CourseID] = false;
-              }
+              this.isDuplicate[subject.CourseID] = false;
             }
           }
         }
-      },
+      }
+    },
     textSearch: function (value) {
       this.getSubjects({
         id: this.student.StudentID,
@@ -193,7 +202,7 @@ export default {
     if (info) {
       this.setStudent(info);
       this.loadData();
-    } 
+    }
   },
   methods: {
     ...mapMutations(["setSubjects", "setStudent", "setEnrollments"]),
@@ -241,35 +250,42 @@ export default {
       );
     },
     confirmRegistration() {
-      if (this.enrollment.length > 0) {
-        if (this.oldEnrollment.length > 0) this.confirmAction = 2;
-        else if (this.oldEnrollment.length == 0) this.confirmAction = 1;
-        if (!this.$compareObjects(this.oldEnrollment, this.enrollment)) {
-          let listCourseId = this.enrollment
-            .map((item) => item.CourseID)
-            .join(",");
-          let listStatus = this.enrollment.map((item) => item.Status).join(",");
-          if (this.confirmAction == 1) {
-            this.insertEnrollments({
-              studentId: this.student.StudentID,
-              listCourseId: listCourseId,
-              listStatus: listStatus,
-            });
-            this.oldEnrollment = [...this.enrollment];
-          } else if (this.confirmAction == 2) {
-            this.updateEnrollments({
-              studentId: this.student.StudentID,
-              listCourseId: listCourseId,
-              listStatus: listStatus,
-            });
-            this.oldEnrollment = [...this.enrollment];
-          }
-        }
-        else {
-          alert("Bạn chưa thay đổi môn học nào.")
-        }
+      if (this.totalRegistedCredit > 30) {
+        alert(
+          "Sinh viên không được đăng ký quá 30 tín chỉ. Vui lòng điều chỉnh lại môn học."
+        );
       } else {
-        alert("Bạn cần chọn môn học trước khi nhấn Ghi nhận.");
+        if (this.enrollment.length > 0) {
+          if (this.oldEnrollment.length > 0) this.confirmAction = 2;
+          else if (this.oldEnrollment.length == 0) this.confirmAction = 1;
+          if (!this.$compareObjects(this.oldEnrollment, this.enrollment)) {
+            let listCourseId = this.enrollment
+              .map((item) => item.CourseID)
+              .join(",");
+            let listStatus = this.enrollment
+              .map((item) => item.Status)
+              .join(",");
+            if (this.confirmAction == 1) {
+              this.insertEnrollments({
+                studentId: this.student.StudentID,
+                listCourseId: listCourseId,
+                listStatus: listStatus,
+              });
+              this.oldEnrollment = [...this.enrollment];
+            } else if (this.confirmAction == 2) {
+              this.updateEnrollments({
+                studentId: this.student.StudentID,
+                listCourseId: listCourseId,
+                listStatus: listStatus,
+              });
+              this.oldEnrollment = [...this.enrollment];
+            }
+          } else {
+            alert("Bạn chưa thay đổi môn học nào.");
+          }
+        } else {
+          alert("Bạn cần chọn môn học trước khi nhấn Ghi nhận.");
+        }
       }
     },
     deleteEnrollmentOnClick() {

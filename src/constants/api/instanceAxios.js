@@ -2,8 +2,8 @@ import { reactive } from 'vue';
 import axios from 'axios';
 
 const state = reactive({
-  // baseURL: 'https://localhost:44345/api',
-  baseURL: 'https://uetcourseregistration.azurewebsites.net/api',
+  baseURL: 'https://localhost:44345/api',
+  // baseURL: 'https://uetcourseregistration.azurewebsites.net/api',
   headers: {
     'Content-Type': 'application/json',
     Accept: 'application/json',
